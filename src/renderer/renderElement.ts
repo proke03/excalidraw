@@ -291,13 +291,26 @@ const drawElementOnCanvas = (
             : element.textAlign === "right"
             ? element.width
             : 0;
-        for (let index = 0; index < lines.length; index++) {
-          context.fillText(
-            lines[index],
-            horizontalOffset,
-            (index + 1) * lineHeight - verticalOffset,
-          );
-        }
+        lines.forEach((line, index) => {
+          for (let i = 0; i < line.length; i++) {
+            if(i % 2 === 0) context.fillStyle = "red";
+            else context.fillStyle = "blue";
+            const char = line[i];
+            const charHeight = getApproxLineHeight(
+              getFontString({ ...element, fontSize: element.fontSize / 2 }),
+            );
+            const charX =
+              horizontalOffset +
+              context.measureText(line.substring(0, i)).width;
+            const charY =
+              (index + 1) * lineHeight - verticalOffset - charHeight / 2;
+            const charShape = getShapeForElement(element)?.[index]?.[i];
+            if (charShape) {
+              rc.draw(charShape);
+            }
+            context.fillText(char, charX, charY);
+          }
+        })
         context.restore();
         if (shouldTemporarilyAttach) {
           context.canvas.remove();
