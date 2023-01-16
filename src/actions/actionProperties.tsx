@@ -201,25 +201,75 @@ export const actionChangeStrokeColor = register({
   name: "changeStrokeColor",
   trackEvent: false,
   perform: (elements, appState, value) => {
+    const newAppState: AppState = {
+      ...appState,
+      ...value,
+    };
+
+    if (
+      newAppState.selectedTextRange?.type === "cursor" &&
+      typeof value.currentItemStrokeColor === "string"
+    ) {
+      newAppState.selectedTextRange.newColorRange = {
+        color: value.currentItemStrokeColor,
+        position: newAppState.selectedTextRange.cursorPosition,
+      };
+    }
+
     return {
       ...(value.currentItemStrokeColor && {
         elements: changeProperty(
           elements,
           appState,
           (el) => {
-            return hasStrokeColor(el.type)
-              ? newElementWith(el, {
-                  strokeColor: value.currentItemStrokeColor,
-                })
-              : el;
+            if (!hasStrokeColor(el.type)) {
+              return el;
+            }
+
+            if (el.type === "text") {
+              if (appState.selectedTextRange?.type === "range") {
+                // Assertion is required because otherwise typescript will "forget" the narrowing in callbacks
+                const selectedRange = appState.selectedTextRange;
+
+                const rangeLength = selectedRange.end - selectedRange.start;
+
+                if (rangeLength === el.text.length) {
+                  return newElementWith(el, {
+                    colorRanges: {},
+                    strokeColor: value.currentItemStrokeColor,
+                  });
+                }
+
+                const newColorRange = Object.fromEntries(
+                  Array.from(
+                    {
+                      length: rangeLength,
+                    },
+                    (_, i) => [
+                      i + selectedRange.start,
+                      value.currentItemStrokeColor,
+                    ],
+                  ),
+                );
+                return newElementWith(el, {
+                  colorRanges: {
+                    ...el.colorRanges,
+                    ...newColorRange,
+                  },
+                });
+              }
+
+              return el;
+            }
+
+            return newElementWith(el, {
+              strokeColor: value.currentItemStrokeColor,
+            });
           },
           true,
         ),
       }),
-      appState: {
-        ...appState,
-        ...value,
-      },
+      appState: newAppState,
       commitToHistory: !!value.currentItemStrokeColor,
     };
   },

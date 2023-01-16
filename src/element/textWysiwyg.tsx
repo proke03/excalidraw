@@ -4,6 +4,7 @@ import {
   getFontString,
   getFontFamilyString,
   isTestEnv,
+  getSelectedTextColorRangeColor,
 } from "../utils";
 import Scene from "../scene/Scene";
 import {
@@ -99,6 +100,7 @@ export const textWysiwyg = ({
   id,
   onChange,
   onSubmit,
+  onSelection,
   getViewportCoords,
   element,
   canvas,
@@ -112,6 +114,7 @@ export const textWysiwyg = ({
     viaKeyboard: boolean;
     originalText: string;
   }) => void;
+  onSelection: (selection: { start: number; end: number } | null) => void;
   getViewportCoords: (x: number, y: number) => [number, number];
   element: ExcalidrawTextElement;
   canvas: HTMLCanvasElement | null;
@@ -295,7 +298,14 @@ export const textWysiwyg = ({
         ),
         textAlign,
         verticalAlign,
-        color: updatedTextElement.strokeColor,
+        color: "transparent",
+        caretColor:
+          updatedTextElement && appState.selectedTextRange
+            ? getSelectedTextColorRangeColor(
+                updatedTextElement,
+                appState.selectedTextRange,
+              )
+            : "currentColor",
         opacity: updatedTextElement.opacity / 100,
         filter: "var(--theme-filter)",
         maxHeight: `${editorMaxHeight}px`,
@@ -423,6 +433,13 @@ export const textWysiwyg = ({
       onChange(normalizeText(editable.value));
     };
   }
+
+  const handleSelectionChange = () => {
+    onSelection({ start: editable.selectionStart, end: editable.selectionEnd });
+    updateWysiwygStyle();
+  };
+
+  document.addEventListener("selectionchange", handleSelectionChange);
 
   editable.onkeydown = (event) => {
     if (!event.shiftKey && actionZoomIn.keyTest(event)) {
@@ -606,6 +623,8 @@ export const textWysiwyg = ({
       }
     }
 
+    onSelection(null);
+
     onSubmit({
       text,
       viaKeyboard: submittedViaKeyboard,
@@ -632,7 +651,8 @@ export const textWysiwyg = ({
     window.removeEventListener("pointerdown", onPointerDown);
     window.removeEventListener("pointerup", bindBlurEvent);
     window.removeEventListener("blur", handleSubmit);
-
+    document.removeEventListener("selectionchange", handleSelectionChange);
+    
     unbindUpdate();
 
     editable.remove();

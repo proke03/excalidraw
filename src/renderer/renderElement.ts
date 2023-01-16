@@ -26,7 +26,7 @@ import { RoughSVG } from "roughjs/bin/svg";
 import { RoughGenerator } from "roughjs/bin/generator";
 
 import { RenderConfig } from "../scene/types";
-import { distance, getFontString, getFontFamilyString, isRTL } from "../utils";
+import { distance, getFontString, getFontFamilyString, isRTL, getLineGroupedRanges } from "../utils";
 import { getCornerRadius, isPathALoop } from "../math";
 import rough from "roughjs/bin/rough";
 import { AppState, BinaryFiles, Zoom } from "../types";
@@ -273,10 +273,9 @@ const drawElementOnCanvas = (
         context.save();
         context.font = getFontString(element);
         context.fillStyle = element.strokeColor;
-        context.textAlign = element.textAlign as CanvasTextAlign;
 
         // Canvas does not support multiline text by default
-        const lines = element.text.replace(/\r\n?/g, "\n").split("\n");
+        const lines = getLineGroupedRanges(element);
         const lineHeight = element.containerId
           ? getApproxLineHeight(getFontString(element))
           : element.height / lines.length;
@@ -285,32 +284,31 @@ const drawElementOnCanvas = (
           verticalOffset = getBoundTextElementOffset(element);
         }
 
-        const horizontalOffset =
-          element.textAlign === "center"
-            ? element.width / 2
-            : element.textAlign === "right"
-            ? element.width
-            : 0;
-        lines.forEach((line, index) => {
-          for (let i = 0; i < line.length; i++) {
-            if(i % 2 === 0) context.fillStyle = "red";
-            else context.fillStyle = "blue";
-            const char = line[i];
-            const charHeight = getApproxLineHeight(
-              getFontString({ ...element, fontSize: element.fontSize / 2 }),
+        lines.forEach((ranges, index) => {
+          const { width: lineWidth } = context.measureText(
+              // TODO: Maybe compute this inside of getLineGroupedRanges for perf
+              ranges.map((range) => range.text).join(""),
+          );
+
+          let horizontalOffset =
+            element.textAlign === "center"
+              ? (element.width - lineWidth) / 2
+              : element.textAlign === "right"
+              ? element.width - lineWidth
+              : 0;
+
+          ranges.forEach((range) => {
+            context.fillStyle = range.color;
+            context.fillText(
+              range.text,
+              horizontalOffset,
+              (index + 1) * lineHeight - verticalOffset,
             );
-            const charX =
-              horizontalOffset +
-              context.measureText(line.substring(0, i)).width;
-            const charY =
-              (index + 1) * lineHeight - verticalOffset - charHeight / 2;
-            const charShape = getShapeForElement(element)?.[index]?.[i];
-            if (charShape) {
-              rc.draw(charShape);
-            }
-            context.fillText(char, charX, charY);
-          }
-        })
+            horizontalOffset +=
+              context.measureText(range.text).width * (rtl ? -1 : 1);
+          });
+        });
+
         context.restore();
         if (shouldTemporarilyAttach) {
           context.canvas.remove();
