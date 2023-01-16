@@ -1,3 +1,4 @@
+import { CaptureConsole } from "@sentry/integrations";
 import { AppState } from "../../src/types";
 import { ButtonIconSelect } from "../components/ButtonIconSelect";
 import { ColorPicker } from "../components/ColorPicker";
@@ -81,7 +82,7 @@ import {
   isSomeElementSelected,
 } from "../scene";
 import { hasStrokeColor } from "../scene/comparisons";
-import { arrayToMap } from "../utils";
+import { arrayToMap, getSelectedTextColorRangeColor } from "../utils";
 import { register } from "./register";
 
 const FONT_SIZE_RELATIVE_INCREASE_STEP = 0.1;
@@ -225,7 +226,6 @@ export const actionChangeStrokeColor = register({
             if (!hasStrokeColor(el.type)) {
               return el;
             }
-
             if (el.type === "text") {
               if (appState.selectedTextRange?.type === "range") {
                 // Assertion is required because otherwise typescript will "forget" the narrowing in callbacks
@@ -252,6 +252,7 @@ export const actionChangeStrokeColor = register({
                   ),
                 );
                 return newElementWith(el, {
+                  // strokeColor: getSelectedTextColorRangeColor(el, appState.selectedTextRange),
                   colorRanges: {
                     ...el.colorRanges,
                     ...newColorRange,
@@ -282,7 +283,13 @@ export const actionChangeStrokeColor = register({
         color={getFormValue(
           elements,
           appState,
-          (element) => element.strokeColor,
+          (element) => (
+              (element.type === "text" &&
+              appState.selectedTextRange?.type)? 
+              getSelectedTextColorRangeColor(element, appState.selectedTextRange) 
+              :
+              element.strokeColor
+          ),
           appState.currentItemStrokeColor,
         )}
         onChange={(color) => updateData({ currentItemStrokeColor: color })}
