@@ -388,6 +388,7 @@ export const textWysiwyg = ({
       const updatedTextElement = Scene.getScene(element)?.getElement(
         id,
       ) as ExcalidrawTextElement;
+      // console.log("oninput", updatedTextElement.text, editable.value);
       const font = getFontString(updatedTextElement);
       // using scrollHeight here since we need to calculate
       // number of lines so cannot use editable.style.height
@@ -435,6 +436,21 @@ export const textWysiwyg = ({
   }
 
   const handleSelectionChange = () => {
+    const updatedTextElement = Scene.getScene(element)?.getElement(
+      id,
+    ) as ExcalidrawTextElement;
+    // console.log(editable.selectionStart, editable.selectionEnd)
+    // console.log(updatedTextElement.colorRanges)
+    // console.log(updatedTextElement.text.length, editable.value.length)
+    
+    // if(updatedTextElement.text.length - editable.textLength)
+    for(const key in updatedTextElement.colorRanges){
+      // console.log(key, updatedTextElement.colorRanges[key])
+      if(updatedTextElement.textAlign === "left"){
+
+      }
+    }
+    console.log('handleSelectionChange', editable.selectionStart, editable.selectionEnd, editable.value)
     onSelection({ start: editable.selectionStart, end: editable.selectionEnd });
     updateWysiwygStyle();
   };

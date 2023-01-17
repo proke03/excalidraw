@@ -273,6 +273,7 @@ const drawElementOnCanvas = (
         context.save();
         context.font = getFontString(element);
         context.fillStyle = element.strokeColor;
+        // context.textAlign = element.textAlign as CanvasTextAlign;
 
         // Canvas does not support multiline text by default
         const lines = getLineGroupedRanges(element);
