@@ -2401,7 +2401,6 @@ class App extends React.Component<AppProps, AppState> {
       }),
       onSubmit: withBatchedUpdates(({ text, viaKeyboard, originalText }) => {
         const isDeleted = !text.trim();
-        updateElement(text, originalText, isDeleted, undefined);
         // select the created text element only if submitting via keyboard
         // (when submitting via click it should act as signal to deselect)
         if (!isDeleted && viaKeyboard) {

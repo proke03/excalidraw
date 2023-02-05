@@ -228,6 +228,12 @@ export const actionChangeStrokeColor = register({
             if (el.type === "text") {
               if (appState.selectedTextRange?.type === "range") {
                 // Assertion is required because otherwise typescript will "forget" the narrowing in callbacks
+                if (
+                  appState.currentItemStrokeColor !==
+                  value.currentItemStrokeColor
+                ) {
+                  return el;
+                }
                 const selectedRange = appState.selectedTextRange;
 
                 const rangeLength = selectedRange.end - selectedRange.start;
