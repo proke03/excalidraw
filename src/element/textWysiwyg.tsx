@@ -439,16 +439,17 @@ export const textWysiwyg = ({
           editable.style.height = `${editable.scrollHeight}px`;
         }
       }
-
-      if (editable.textLength > updatedTextElement.text.length) {
+      
+      const diff = editable.textLength - updatedTextElement.text.length;
+      if ( diff > 0 ) {
         const newColorRanges: Record<number, string> = {};
         const keys = Object.keys(updatedTextElement.colorRanges);
         for (let i = keys.length - 1; i >=0; i--) {
           const key = Number(keys[i]);
-          newColorRanges[key >= editable.selectionStart-1? key + 1 : key] = updatedTextElement.colorRanges[key];
+          newColorRanges[key >= editable.selectionStart-diff? key + diff : key] = updatedTextElement.colorRanges[key];
         }
+        console.log(updatedTextElement.text, editable.value);
         mutateElement(updatedTextElement, { text:editable.value, originalText: editable.value, colorRanges: newColorRanges });
-        onChange(normalizeText(editable.value));
       }
 
       onChange(normalizeText(editable.value));
