@@ -439,26 +439,23 @@ export const textWysiwyg = ({
           editable.style.height = `${editable.scrollHeight}px`;
         }
       }
+
+      if (editable.textLength > updatedTextElement.text.length) {
+        const newColorRanges: Record<number, string> = {};
+        const keys = Object.keys(updatedTextElement.colorRanges);
+        for (let i = keys.length - 1; i >=0; i--) {
+          const key = Number(keys[i]);
+          newColorRanges[key >= editable.selectionStart-1? key + 1 : key] = updatedTextElement.colorRanges[key];
+        }
+        mutateElement(updatedTextElement, { text:editable.value, originalText: editable.value, colorRanges: newColorRanges });
+        onChange(normalizeText(editable.value));
+      }
+
       onChange(normalizeText(editable.value));
     };
   }
 
   const handleSelectionChange = () => {
-    const updatedTextElement = Scene.getScene(element)?.getElement(
-      id,
-    ) as ExcalidrawTextElement;
-    // console.log(editable.selectionStart, editable.selectionEnd)
-    // console.log(updatedTextElement.colorRanges)
-    // console.log(updatedTextElement.text.length, editable.value.length)
-    
-    // if(updatedTextElement.text.length - editable.textLength)
-    for(const key in updatedTextElement.colorRanges){
-      // console.log(key, updatedTextElement.colorRanges[key])
-      if(updatedTextElement.textAlign === "left"){
-
-      }
-    }
-    console.log('handleSelectionChange', editable.selectionStart, editable.selectionEnd, editable.value)
     onSelection({ start: editable.selectionStart, end: editable.selectionEnd });
     updateWysiwygStyle();
   };
