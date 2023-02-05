@@ -251,7 +251,6 @@ export const actionChangeStrokeColor = register({
                   ),
                 );
                 return newElementWith(el, {
-                  // strokeColor: getSelectedTextColorRangeColor(el, appState.selectedTextRange),
                   colorRanges: {
                     ...el.colorRanges,
                     ...newColorRange,
@@ -259,7 +258,10 @@ export const actionChangeStrokeColor = register({
                 });
               }
 
-              return el;
+              return newElementWith(el, {
+                colorRanges: {},
+                strokeColor: value.currentItemStrokeColor,
+              });
             }
 
             return newElementWith(el, {
