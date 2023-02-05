@@ -145,11 +145,11 @@ export const textWysiwyg = ({
     const appState = app.state;
     const updatedTextElement =
       Scene.getScene(element)?.getElement<ExcalidrawTextElement>(id);
+
     if (!updatedTextElement) {
       return;
     }
     const { textAlign, verticalAlign } = updatedTextElement;
-
     const approxLineHeight = getApproxLineHeight(
       getFontString(updatedTextElement),
     );
@@ -164,6 +164,7 @@ export const textWysiwyg = ({
       // Set to element height by default since that's
       // what is going to be used for unbounded text
       let textElementHeight = updatedTextElement.height;
+
       if (container && updatedTextElement.containerId) {
         if (isArrowElement(container)) {
           const boundTextCoords =
@@ -209,7 +210,6 @@ export const textWysiwyg = ({
         maxHeight = getMaxContainerHeight(container);
 
         // autogrow container height if text exceeds
-
         if (!isArrowElement(container) && textElementHeight > maxHeight) {
           const diff = Math.min(
             textElementHeight - maxHeight,
@@ -279,7 +279,6 @@ export const textWysiwyg = ({
       // Make sure text editor height doesn't go beyond viewport
       const editorMaxHeight =
         (appState.height - viewportY) / appState.zoom.value;
-
       Object.assign(editable.style, {
         font: getFontString(updatedTextElement),
         // must be defined *after* font ¯\_(ツ)_/¯
@@ -406,11 +405,12 @@ export const textWysiwyg = ({
       // first line as well as setting height to "auto"
       // doubles the height as soon as user starts typing
       if (isBoundToContainer(element) && lines > 1) {
+        const container = getContainerElement(element);
+
         let height = "auto";
         editable.style.height = "0px";
         let heightSet = false;
         if (lines === 2) {
-          const container = getContainerElement(element);
           const actualLineCount = wrapText(
             editable.value,
             font,
@@ -427,6 +427,14 @@ export const textWysiwyg = ({
             heightSet = true;
           }
         }
+        const wrappedText = wrapText(
+          normalizeText(editable.value),
+          font,
+          getMaxContainerWidth(container!),
+        );
+        const width = getTextWidth(wrappedText, font);
+        editable.style.width = `${width}px`;
+
         if (!heightSet) {
           editable.style.height = `${editable.scrollHeight}px`;
         }
