@@ -1,4 +1,3 @@
-import { CaptureConsole } from "@sentry/integrations";
 import { AppState } from "../../src/types";
 import { ButtonIconSelect } from "../components/ButtonIconSelect";
 import { ColorPicker } from "../components/ColorPicker";
@@ -283,13 +282,13 @@ export const actionChangeStrokeColor = register({
         color={getFormValue(
           elements,
           appState,
-          (element) => (
-              (element.type === "text" &&
-              appState.selectedTextRange?.type)? 
-              getSelectedTextColorRangeColor(element, appState.selectedTextRange) 
-              :
-              element.strokeColor
-          ),
+          (element) =>
+            element.type === "text" && appState.selectedTextRange?.type
+              ? getSelectedTextColorRangeColor(
+                  element,
+                  appState.selectedTextRange,
+                )
+              : element.strokeColor,
           appState.currentItemStrokeColor,
         )}
         onChange={(color) => updateData({ currentItemStrokeColor: color })}

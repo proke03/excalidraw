@@ -439,19 +439,43 @@ export const textWysiwyg = ({
           editable.style.height = `${editable.scrollHeight}px`;
         }
       }
-      
+
       const diff = editable.textLength - updatedTextElement.text.length;
-      if ( diff > 0 ) {
+      if (diff > 0) {
         const newColorRanges: Record<number, string> = {};
         const keys = Object.keys(updatedTextElement.colorRanges);
-        for (let i = keys.length - 1; i >=0; i--) {
+        for (let i = keys.length - 1; i >= 0; i--) {
           const key = Number(keys[i]);
-          newColorRanges[key >= editable.selectionStart-diff? key + diff : key] = updatedTextElement.colorRanges[key];
+          newColorRanges[
+            key >= editable.selectionStart - diff ? key + diff : key
+          ] = updatedTextElement.colorRanges[key];
         }
-        console.log(updatedTextElement.text, editable.value);
-        mutateElement(updatedTextElement, { text:editable.value, originalText: editable.value, colorRanges: newColorRanges });
+        mutateElement(updatedTextElement, {
+          text: editable.value,
+          originalText: editable.value,
+          colorRanges: newColorRanges,
+        });
+      } else if (diff < 0) {
+        const newColorRanges: Record<number, string> = {};
+        const keys = Object.keys(updatedTextElement.colorRanges);
+        const deletedRange = {
+          start: editable.selectionStart,
+          end: editable.selectionStart - diff,
+        };
+        for (let i = 0; i < keys.length; i++) {
+          const key = Number(keys[i]);
+          if (deletedRange.start > key || deletedRange.end <= key) {
+            newColorRanges[
+              key >= editable.selectionStart - diff ? key + diff : key
+            ] = updatedTextElement.colorRanges[key];
+          }
+        }
+        mutateElement(updatedTextElement, {
+          text: editable.value,
+          originalText: editable.value,
+          colorRanges: newColorRanges,
+        });
       }
-
       onChange(normalizeText(editable.value));
     };
   }
@@ -674,7 +698,7 @@ export const textWysiwyg = ({
     window.removeEventListener("pointerup", bindBlurEvent);
     window.removeEventListener("blur", handleSubmit);
     document.removeEventListener("selectionchange", handleSelectionChange);
-    
+
     unbindUpdate();
 
     editable.remove();

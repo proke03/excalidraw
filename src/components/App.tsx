@@ -2369,7 +2369,7 @@ class App extends React.Component<AppProps, AppState> {
             return updateTextElement(_element, {
               text,
               isDeleted,
-              originalText
+              originalText,
             });
           }
           return _element;
@@ -2467,7 +2467,12 @@ class App extends React.Component<AppProps, AppState> {
 
     // do an initial update to re-initialize element position since we were
     // modifying element's x/y for sake of editor (case: syncing to remote)
-    updateElement(element.text, element.originalText, false, element.colorRanges);
+    updateElement(
+      element.text,
+      element.originalText,
+      false,
+      element.colorRanges,
+    );
   }
 
   private deselectElements() {

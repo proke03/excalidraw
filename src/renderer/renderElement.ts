@@ -26,7 +26,13 @@ import { RoughSVG } from "roughjs/bin/svg";
 import { RoughGenerator } from "roughjs/bin/generator";
 
 import { RenderConfig } from "../scene/types";
-import { distance, getFontString, getFontFamilyString, isRTL, getLineGroupedRanges } from "../utils";
+import {
+  distance,
+  getFontString,
+  getFontFamilyString,
+  isRTL,
+  getLineGroupedRanges,
+} from "../utils";
 import { getCornerRadius, isPathALoop, isRightAngle } from "../math";
 import rough from "roughjs/bin/rough";
 import { AppState, BinaryFiles, Zoom } from "../types";
@@ -287,8 +293,8 @@ const drawElementOnCanvas = (
 
         lines.forEach((ranges, index) => {
           const { width: lineWidth } = context.measureText(
-              // TODO: Maybe compute this inside of getLineGroupedRanges for perf
-              ranges.map((range) => range.text).join(""),
+            // TODO: Maybe compute this inside of getLineGroupedRanges for perf
+            ranges.map((range) => range.text).join(""),
           );
 
           let horizontalOffset =

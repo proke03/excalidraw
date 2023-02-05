@@ -11,7 +11,11 @@ import {
   THEME,
   WINDOWS_EMOJI_FALLBACK_FONT,
 } from "./constants";
-import { ExcalidrawTextElement, FontFamilyValues, FontString } from "./element/types";
+import {
+  ExcalidrawTextElement,
+  FontFamilyValues,
+  FontString,
+} from "./element/types";
 import { AppState, DataURL, LastActiveTool, Selection, Zoom } from "./types";
 import { unstable_batchedUpdates } from "react-dom";
 import { SHAPES } from "./shapes";
@@ -769,7 +773,9 @@ export const getSelectedTextColorRangeColor = (
 
   return (
     element.colorRanges[
-      element.textAlign === "left"? selectedTextRange.cursorPosition - 1 : selectedTextRange.cursorPosition
+      element.textAlign === "left"
+        ? selectedTextRange.cursorPosition - 1
+        : selectedTextRange.cursorPosition
     ] ?? element.strokeColor
   );
 };
