@@ -450,6 +450,17 @@ export const textWysiwyg = ({
             key >= editable.selectionStart - diff ? key + diff : key
           ] = updatedTextElement.colorRanges[key];
         }
+
+        if (app.state.selectedTextRange) {
+          const currentStrokeColor =
+            app.state.selectedTextRange?.type === "cursor"
+              ? getSelectedTextColorRangeColor(
+                  updatedTextElement,
+                  app.state.selectedTextRange,
+                )
+              : updatedTextElement.strokeColor;
+          newColorRanges[editable.selectionStart - 1] = currentStrokeColor;
+        }
         mutateElement(updatedTextElement, {
           text: editable.value,
           originalText: editable.value,

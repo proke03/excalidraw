@@ -291,7 +291,8 @@ export const actionChangeStrokeColor = register({
           elements,
           appState,
           (element) =>
-            element.type === "text" && appState.selectedTextRange?.type
+            element.type === "text" &&
+            appState.selectedTextRange?.type === "cursor"
               ? getSelectedTextColorRangeColor(
                   element,
                   appState.selectedTextRange,
