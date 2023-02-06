@@ -387,7 +387,6 @@ export const textWysiwyg = ({
       const updatedTextElement = Scene.getScene(element)?.getElement(
         id,
       ) as ExcalidrawTextElement;
-      // console.log("oninput", updatedTextElement.text, editable.value);
       const font = getFontString(updatedTextElement);
       // using scrollHeight here since we need to calculate
       // number of lines so cannot use editable.style.height

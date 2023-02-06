@@ -81,6 +81,7 @@ import {
   isSomeElementSelected,
 } from "../scene";
 import { hasStrokeColor } from "../scene/comparisons";
+import Scene from "../scene/Scene";
 import { arrayToMap, getSelectedTextColorRangeColor } from "../utils";
 import { register } from "./register";
 
@@ -294,7 +295,9 @@ export const actionChangeStrokeColor = register({
             element.type === "text" &&
             appState.selectedTextRange?.type === "cursor"
               ? getSelectedTextColorRangeColor(
-                  element,
+                  (Scene.getScene(element)?.getElement(
+                    element.id,
+                  ) as ExcalidrawTextElement) ?? element,
                   appState.selectedTextRange,
                 )
               : element.strokeColor,
