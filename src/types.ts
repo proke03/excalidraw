@@ -92,6 +92,14 @@ export type LastActiveTool =
     }
   | null;
 
+export type Selection =
+  | { type: "range"; start: number; end: number }
+  | {
+      type: "cursor";
+      cursorPosition: number;
+      newColorRange: { color: string; position: number } | null;
+    };
+
 export type AppState = {
   contextMenu: {
     items: ContextMenuItems;
@@ -205,6 +213,7 @@ export type AppState = {
   pendingImageElementId: ExcalidrawImageElement["id"] | null;
   showHyperlinkPopup: false | "info" | "editor";
   selectedLinearElement: LinearElementEditor | null;
+  selectedTextRange: null | Selection;
 };
 
 export type NormalizedZoomValue = number & { _brand: "normalizedZoom" };

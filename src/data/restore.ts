@@ -176,6 +176,7 @@ const restoreElement = (
         verticalAlign: element.verticalAlign || DEFAULT_VERTICAL_ALIGN,
         containerId: element.containerId ?? null,
         originalText: element.originalText || element.text,
+        colorRanges: element.colorRanges ?? {},
       });
 
       if (refreshDimensions) {
