@@ -792,8 +792,7 @@ export const getSelectedTextColorRangeColor = (
 
   return (
     element.colorRanges[
-      // TODO: Should + 1 here when in RTL mode
-      selectedTextRange.cursorPosition - 1
+      element.textAlign === "left"? selectedTextRange.cursorPosition - 1 : selectedTextRange.cursorPosition
     ] ?? element.strokeColor
   );
 };
