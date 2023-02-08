@@ -438,20 +438,19 @@ export const textWysiwyg = ({
           editable.style.height = `${editable.scrollHeight}px`;
         }
       }
-      
+
       const diff = editable.textLength - updatedTextElement.text.length;
       if (diff > 0) {
         const newColorRanges: Record<number, string> = {};
         const keys = Object.keys(updatedTextElement.colorRanges);
         for (let i = keys.length - 1; i >= 0; i--) {
           const key = Number(keys[i]);
-          if(key >= editable.selectionStart - diff) console.log(key)
           newColorRanges[
             key >= editable.selectionStart - diff ? key + diff : key
           ] = updatedTextElement.colorRanges[key];
         }
 
-        if (diff===1 && app.state.selectedTextRange) {
+        if (diff === 1 && app.state.selectedTextRange) {
           const currentStrokeColor =
             app.state.selectedTextRange?.type === "cursor"
               ? getSelectedTextColorRangeColor(
