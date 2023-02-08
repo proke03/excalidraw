@@ -1212,22 +1212,22 @@ describe("textWysiwyg", () => {
         fireEvent.click(screen.getByTitle("Align top"));
 
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              174,
-              20,
-            ]
-          `);
+          Array [
+            174,
+            20,
+          ]
+        `);
       });
 
       it("when center left", async () => {
         fireEvent.click(screen.getByTitle("Center vertically"));
         fireEvent.click(screen.getByTitle("Left"));
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              15,
-              25,
-            ]
-          `);
+          Array [
+            15,
+            25,
+          ]
+        `);
       });
 
       it("when center center", async () => {
@@ -1235,11 +1235,11 @@ describe("textWysiwyg", () => {
         fireEvent.click(screen.getByTitle("Center vertically"));
 
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              -25,
-              25,
-            ]
-          `);
+          Array [
+            -25,
+            25,
+          ]
+        `);
       });
 
       it("when center right", async () => {
@@ -1247,11 +1247,11 @@ describe("textWysiwyg", () => {
         fireEvent.click(screen.getByTitle("Center vertically"));
 
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              174,
-              25,
-            ]
-          `);
+          Array [
+            174,
+            25,
+          ]
+        `);
       });
 
       it("when bottom left", async () => {
@@ -1259,33 +1259,33 @@ describe("textWysiwyg", () => {
         fireEvent.click(screen.getByTitle("Align bottom"));
 
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              15,
-              25,
-            ]
-          `);
+          Array [
+            15,
+            25,
+          ]
+        `);
       });
 
       it("when bottom center", async () => {
         fireEvent.click(screen.getByTitle("Center"));
         fireEvent.click(screen.getByTitle("Align bottom"));
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              94.5,
-              25,
-            ]
-          `);
+          Array [
+            94.5,
+            25,
+          ]
+        `);
       });
 
       it("when bottom right", async () => {
         fireEvent.click(screen.getByTitle("Right"));
         fireEvent.click(screen.getByTitle("Align bottom"));
         expect([h.elements[1].x, h.elements[1].y]).toMatchInlineSnapshot(`
-            Array [
-              174,
-              25,
-            ]
-          `);
+          Array [
+            174,
+            25,
+          ]
+        `);
       });
     });
   });
