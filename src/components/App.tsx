@@ -2367,7 +2367,6 @@ class App extends React.Component<AppProps, AppState> {
         ...this.scene.getElementsIncludingDeleted().map((_element) => {
           if (_element.id === element.id && isTextElement(_element)) {
             return updateTextElement(_element, {
-              text,
               isDeleted,
               originalText,
             });

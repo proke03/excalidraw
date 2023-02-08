@@ -14,7 +14,12 @@ import {
   ExcalidrawTextContainer,
   TextColorRanges,
 } from "../element/types";
-import { getFontString, getUpdatedTimestamp, isTestEnv } from "../utils";
+import {
+  compareTextElements,
+  getFontString,
+  getUpdatedTimestamp,
+  isTestEnv,
+} from "../utils";
 import { randomInteger, randomId } from "../random";
 import { mutateElement, newElementWith } from "./mutateElement";
 import { getNewGroupIdsForDuplication } from "../groups";
@@ -316,12 +321,10 @@ export const getMaxContainerHeight = (container: ExcalidrawElement) => {
 export const updateTextElement = (
   textElement: ExcalidrawTextElement,
   {
-    text,
     isDeleted,
     originalText,
     colorRanges,
   }: {
-    text: string;
     isDeleted?: boolean;
     originalText: string;
     colorRanges?: TextColorRanges;
