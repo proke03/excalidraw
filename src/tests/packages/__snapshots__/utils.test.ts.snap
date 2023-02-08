@@ -64,6 +64,7 @@ Object {
   "selectedElementIds": Object {},
   "selectedGroupIds": Object {},
   "selectedLinearElement": null,
+  "selectedTextRange": null,
   "selectionElement": null,
   "shouldCacheIgnoreZoom": false,
   "showHyperlinkPopup": false,
